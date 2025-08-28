@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>{{ page.title }}</h1>
+        <a href="{{ url_for('index') }}" class="back-link">Volver al Menú</a>
+    </div>
+
+    <div class="main-content">
+        <div class="text-column">
+            <p>{{ page.content }}</p>
+        </div>
+        
+        <div class="image-column">
+            <div class="logo-container">
+                {% if page.logo_type == 'policia' %}
+                <img src="{{ url_for('static', filename='image/policia cibernetica logo.png') }}" alt="Logo Policia Cibernetica" class="logo">
+                {% else %}
+                <img src="{{ url_for('static', filename='image/imjuve logo.jpeg') }}" alt="Logo IMJUVE" class="logo">
+                {% endif %}
+                <div class="speaker">Orador: {{ page.speaker }}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

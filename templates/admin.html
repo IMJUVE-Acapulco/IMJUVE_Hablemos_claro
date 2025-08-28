@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - Conferencia Joven</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>Administración de Temas</h1>
+        <a href="{{ url_for('index') }}" class="back-link">Volver al Menú Principal</a>
+    </div>
+
+    <div class="admin-container">
+        <div class="form-section">
+            <h2>Agregar Nuevo Tema</h2>
+            <form id="add-page-form">
+                <div class="form-group">
+                    <label for="title">Título del Tema:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Contenido:</label>
+                    <textarea id="content" name="content" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speaker">Orador:</label>
+                    <input type="text" id="speaker" name="speaker" placeholder="Ej: Policia cibernetica">
+                </div>
+                
+                <div class="form-group">
+                    <label for="logo_type">Logo a mostrar:</label>
+                    <select id="logo_type" name="logo_type">
+                        <option value="imjuve">IMJUVE</option>
+                        <option value="policia">Policía Cibernética</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-add">Agregar Tema</button>
+            </form>
+        </div>
+
+        <div class="pages-list">
+            <h2>Temas Existentes</h2>
+            <div id="pages-container">
+                {% for page in pages %}
+                <div class="page-item" data-id="{{ page._id }}">
+                    <h3>{{ page.title }}</h3>
+                    <p>{{ page.content[:100] }}...</p>
+                    <div class="page-actions">
+                        <button class="btn-edit" onclick="editPage('{{ page._id }}')">Editar</button>
+                        <button class="btn-delete" onclick="deletePage('{{ page._id }}')">Eliminar</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('add-page-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('/add_page', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Tema agregado correctamente');
+                    this.reset();
+                    // Recargar la página para ver los cambios
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al agregar el tema');
+            });
+        });
+        
+        function editPage(pageId) {
+            window.location.href = `/edit_page/${pageId}`;
+        }
+        
+        function deletePage(pageId) {
+            if (confirm('¿Estás seguro de que deseas eliminar este tema?')) {
+                fetch(`/delete_page/${pageId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Tema eliminado correctamente');
+                        location.reload();
+                    } else {
+                        alert('Error al eliminar el tema');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Hubo un error al eliminar el tema');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

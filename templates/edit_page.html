@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar {{ page.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="admin-header">
+        <h1>Editar Tema: {{ page.title }}</h1>
+        <a href="{{ url_for('admin') }}" class="back-link">Volver a Administración</a>
+    </div>
+
+    <div class="admin-container">
+        <div class="form-section">
+            <form id="edit-page-form">
+                <div class="form-group">
+                    <label for="title">Título del Tema:</label>
+                    <input type="text" id="title" name="title" value="{{ page.title }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Contenido:</label>
+                    <textarea id="content" name="content" rows="5" required>{{ page.content }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speaker">Orador:</label>
+                    <input type="text" id="speaker" name="speaker" value="{{ page.speaker }}" placeholder="Ej: Policia cibernetica">
+                </div>
+                
+                <div class="form-group">
+                    <label for="logo_type">Logo a mostrar:</label>
+                    <select id="logo_type" name="logo_type">
+                        <option value="imjuve" {% if page.logo_type == 'imjuve' %}selected{% endif %}>IMJUVE</option>
+                        <option value="policia" {% if page.logo_type == 'policia' %}selected{% endif %}>Policía Cibernética</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-add">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('edit-page-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cambios guardados correctamente');
+                    window.location.href = "{{ url_for('admin') }}";
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al guardar los cambios');
+            });
+        });
+    </script>
+</body>
+</html>

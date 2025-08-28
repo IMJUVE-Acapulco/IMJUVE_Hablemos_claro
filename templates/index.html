@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Conferencia joven</h1>
+        <a href="{{ url_for('admin') }}" class="admin-link">Administrar</a>
+    </div>
+
+    <div class="container">
+        <div class="left-column">
+            <h2>Listado de Temas</h2>
+            <ul class="topic-list">
+                {% for page in pages %}
+                <li>
+                    <a href="{{ url_for('show_page', page_id=page._id) }}">{{ page.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="right-column">
+            <div class="image-placeholder">
+                <img src="{{ url_for('static', filename='image/imjuve logo.jpeg') }}" alt="Logo">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('feedback-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                valoracion: document.querySelector('input[name="valoracion"]:checked').value,
+                mensaje: document.getElementById('mensaje').value
+            };
+            
+            fetch('/submit-feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('¡Gracias por tus comentarios!');
+                document.getElementById('feedback-form').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un error al enviar tus comentarios. Por favor intenta nuevamente.');
+            });
+        });
+    </script>
+</body>
+</html>
