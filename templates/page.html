@@ -20,13 +20,14 @@
         <div class="image-column">
             <div class="logo-container">
                 {% if page.logo_type == 'policia' %}
-                <img src="{{ url_for('static', filename='image/policia cibernetica logo.png') }}" alt="Logo Policia Cibernetica" class="logo">
+                <img src="{{ url_for('static', filename='image/policia_cibernetica logo.png') }}" alt="Logo Policia Cibernetica" class="logo">
                 {% else %}
-                <img src="{{ url_for('static', filename='image/imjuve logo.jpeg') }}" alt="Logo IMJUVE" class="logo">
+                <img src="{{ url_for('static', filename='image/imjuve_logo.jpeg') }}" alt="Logo IMJUVE" class="logo">
                 {% endif %}
                 <div class="speaker">Orador: {{ page.speaker }}</div>
             </div>
         </div>
     </div>
 </body>
+
 </html>
