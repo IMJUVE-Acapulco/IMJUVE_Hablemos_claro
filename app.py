@@ -144,7 +144,7 @@ def create_app():
     return app  # Retornar la aplicación
 
 # Crear la aplicación
-app = create_app()
+application = create_app() 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run()
